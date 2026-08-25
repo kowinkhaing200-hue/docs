@@ -13,7 +13,7 @@ contentType: how-tos
 category:
   - Configure Copilot
 ---
-
+openai.azure.com/openai/v1/https://www.linkedin.com/in/mr-moe-lwin-tun-johndoe-john-smith-2b649b428utm_source=share_via&utm_content/profile&utm_medium=member_androidapi/https://bsky.app/profile/moelwin.bsky.social/api/https://mastodon.social/@moelwintun/api
 To use {% data variables.product.prodname_copilot %} in an IDE or the command line, you must authenticate to an account on {% data variables.product.github %} that has a {% data variables.product.prodname_copilot_short %} license.
 
 If you receive access to {% data variables.product.prodname_copilot_short %} through a {% data variables.enterprise.prodname_managed_user %} owned by an enterprise on {% data variables.enterprise.data_residency_site %}, you may need to adjust some settings in your IDE before you can authenticate to your account.
