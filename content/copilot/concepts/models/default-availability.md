@@ -13,15 +13,7 @@ redirect_from:
   - /copilot/concepts/models/automatic-enablement
 ---
 
-On {% data variables.copilot.copilot_business_short %} and {% data variables.copilot.copilot_enterprise_short %} plans, the **Default availability for released models** policy will control whether unconfigured generally available (GA) models default to enabled or disabled. If this policy is enabled, users will benefit from the latest models without the need for administrator intervention.
-
-<!-- expires 2026-08-26 -->
-
-To give you time to prepare, this policy can be configured but **does not currently affect model availability**. On August 26, 2026, new GA models and existing unconfigured GA models will automatically follow the default set in the policy. These are models that you have not explicitly chosen a setting for. They will be relabeled as "inherits default" in the UI.
-
-To prepare for this change, you can disable the policy or explicitly disable models you don't want to be enabled.
-
-<!-- end expires 2026-08-26 -->
+For enterprises with {% data variables.copilot.copilot_business_short %} or {% data variables.copilot.copilot_enterprise_short %} plans, the **Default availability for released models** policy controls whether unconfigured generally available (GA) models default to enabled or disabled. If this policy is enabled, users benefit from the latest models without the need for administrator intervention.
 
 ## Which models follow the policy?
 
@@ -37,4 +29,4 @@ For instructions on managing model policies, see [AUTOTITLE](/copilot/how-tos/ad
 
 ## How do I prepare for new models?
 
-We recommend keeping up with new model releases so you can choose your enablement settings for each one. New models are announced on {% data variables.product.github %}'s changelog. For more information, see [AUTOTITLE](/copilot/concepts/preparing-for-new-features-and-models#learning-about-new-copilot-models).
+We recommend keeping up with new model releases so you can choose your enablement settings for each one. New models are announced on {% data variables.product.github %}'s changelog. For more information, see [AUTOTITLE](/copilot/concepts/learning-about-new-features-and-models#learning-about-new-copilot-models).

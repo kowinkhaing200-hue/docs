@@ -609,6 +609,59 @@ test.describe('test nav at different viewports', () => {
     await expect(page.getByTestId('breadcrumbs-bar')).toBeVisible()
   })
 
+  test('mobile nav opens even when the desktop rail was collapsed', async ({ page }) => {
+    // Collapse the desktop rail at the xxl breakpoint so the persisted
+    // `collapsed` state is set (the collapse toggle only exists at 1400px+).
+    page.setViewportSize({
+      width: 1400,
+      height: 700,
+    })
+    await page.goto('/get-started/foo/bar')
+    await page.getByTestId('sidebar-collapse-toggle').click()
+    // With the rail collapsed the sidebar is not rendered on desktop.
+    await expect(page.getByTestId('sidebar')).toHaveCount(0)
+
+    // Drop below xxl where the inline mobile nav lives. `collapsed` persists.
+    page.setViewportSize({
+      width: 1013,
+      height: 700,
+    })
+
+    // Opening the mobile nav must still render the doc-tree drawer -- before the
+    // fix, `collapsed` short-circuited the sidebar to null while the open state
+    // hid the content column, leaving a blank area with no drawer.
+    await page.getByTestId('sidebar-mobile-toggle').click()
+    await expect(page.getByTestId('sidebar')).toBeVisible()
+
+    // Closing it restores the content column (main content visible again).
+    await page.getByTestId('sidebar-mobile-toggle').click()
+    await expect(page.locator('#main-content')).toBeVisible()
+  })
+
+  test('resizing from mobile to desktop closes the inline nav', async ({ page }) => {
+    // Start below the xxl (1400px) breakpoint where the inline mobile nav lives.
+    page.setViewportSize({
+      width: 1013,
+      height: 700,
+    })
+    await page.goto('/get-started/foo/bar')
+
+    // Open the inline doc-tree nav from the secondary bar.
+    await page.getByTestId('sidebar-mobile-toggle').click()
+    const nav = page.locator('[data-container="nav"]')
+    await expect(nav).toHaveAttribute('data-mobile-open', 'true')
+
+    // Resize up to the desktop breakpoint -- the inline nav should close and the
+    // fixed desktop rail (326px) should take over rather than the full-width
+    // mobile markup persisting over the page.
+    await page.setViewportSize({
+      width: 1400,
+      height: 700,
+    })
+    await expect(nav).toHaveAttribute('data-mobile-open', 'false')
+    await expect(nav).toHaveCSS('width', '326px')
+  })
+
   test('large -> x-large viewports - 1012+', async ({ page }) => {
     page.setViewportSize({
       width: 1013,
@@ -1212,9 +1265,12 @@ test('open search, Ask AI returns 400 error and shows general search results', a
   // Pressing enter should trigger Ask AI, get 400 error, and show general search results
   await page.keyboard.press('Enter')
 
-  // Wait for general search results to appear
-  await expect(page.getByRole('link', { name: 'Foo' })).toBeVisible()
-  await expect(page.getByRole('link', { name: 'Bar' })).toBeVisible()
+  // Wait for the general search results to appear inside the overlay's suggestions
+  // group. These render as ActionList items (buttons), so scope the lookup to the
+  // group rather than matching page-level links of the same name.
+  const generalSuggestions = page.getByTestId('general-autocomplete-suggestions')
+  await expect(generalSuggestions.getByRole('button', { name: 'Foo' })).toBeVisible()
+  await expect(generalSuggestions.getByRole('button', { name: 'Bar' })).toBeVisible()
 
   // Wait for the AI error message to appear
   // This is a canned response for the 400 error
@@ -1244,15 +1300,14 @@ test.describe('LandingCarousel component', () => {
     const carousel = page.locator('[data-testid="landing-carousel"]')
     await expect(carousel).toBeVisible()
 
-    // Check that article cards are present
+    // Check that article cards are present. Brand Card renders each card's title
+    // as an <h3> (Card.Heading) wrapping a stretched <a>, so target the heading.
     const items = page.locator('[data-testid="carousel-items"]')
-    const cards = items.locator('a')
-    await expect(cards.first()).toBeVisible()
+    const cardHeadings = items.locator('h3')
+    await expect(cardHeadings.first()).toBeVisible()
 
     // Verify cards have real titles (not "Unknown Article" when article not found)
-    const firstCardTitle = cards.first().locator('h3')
-    await expect(firstCardTitle).toBeVisible()
-    await expect(firstCardTitle).not.toHaveText('Unknown Article')
+    await expect(cardHeadings.first()).not.toHaveText('Unknown Article')
   })
 
   test('navigation works on desktop', async ({ page }) => {
@@ -1452,6 +1507,30 @@ test.describe('Journey Tracks', () => {
     expect(trackContent).not.toContain('%}')
   })
 
+  test('renders the single-track journey landing path', async ({ page }) => {
+    await page.goto('/get-started/test-journey-single')
+
+    // single-track pages use the simplified heading + guide list, not the numbered cards
+    const singleTrack = page.locator('[data-testid="journey-single-track"]')
+    await expect(singleTrack).toBeVisible()
+    await expect(page.locator('[data-testid="journey-tracks"]')).toHaveCount(0)
+
+    // heading is present
+    await expect(singleTrack.locator('h2')).toBeVisible()
+
+    // guide list renders its article links
+    const guides = singleTrack.locator('[data-testid="journey-articles"] li a')
+    await expect(guides.first()).toBeVisible()
+    expect(await guides.count()).toBeGreaterThan(0)
+
+    // without a surrounding card, the list must sit flush with the heading
+    // rather than picking up the card's inset
+    const listPaddingLeft = await singleTrack
+      .locator('[data-testid="journey-articles"]')
+      .evaluate((el) => getComputedStyle(el).paddingLeft)
+    expect(listPaddingLeft).toBe('0px')
+  })
+
   test('journey navigation components show on article pages', async ({ page }) => {
     // go to an article that's part of a journey track
     await page.goto('/get-started/start-your-journey/hello-world')
@@ -1534,10 +1613,12 @@ test.describe('LandingArticleGridWithFilter component', () => {
     await expect(articleCards.first()).toBeVisible()
 
     const firstCard = articleCards.first()
-    const titleLink = firstCard.locator('h3 span')
+    // Brand Card renders the title as an <h3> (Card.Heading) wrapping a
+    // stretched <a>, and the intro as a Card.Description <p>.
+    const titleLink = firstCard.locator('h3 a')
     await expect(titleLink).toBeVisible()
 
-    const intro = firstCard.locator('div').last() // cardIntro is the last div
+    const intro = firstCard.locator('p').last()
     await expect(intro).toBeVisible()
     const introText = await intro.textContent()
     expect(introText).toBeTruthy()
@@ -1653,6 +1734,36 @@ test.describe('LandingArticleGridWithFilter component', () => {
     await expect(articleGrid).toBeVisible()
   })
 
+  test('card is keyboard-navigable via Enter (client-side)', async ({ page }) => {
+    // The brand Card renders a native stretched anchor; a synthetic click from
+    // pressing Enter on that anchor must bubble to the card's onClick handler so
+    // keyboard users get the same client-side SPA navigation as mouse users.
+    // Guards against a regression if the click-intercept logic is refactored.
+    await page.goto('/get-started/article-grid-discovery')
+
+    const articleGrid = page.getByTestId('article-grid')
+    await expect(articleGrid).toBeVisible()
+
+    const firstCardLink = articleGrid.getByTestId('article-card').first().getByRole('link').first()
+    const href = await firstCardLink.getAttribute('href')
+    expect(href).toBeTruthy()
+
+    // Mark the current document so we can prove navigation was client-side
+    // (no full page reload): a hard navigation would wipe this window property.
+    await page.evaluate(() => {
+      ;(window as unknown as { __spaMarker?: boolean }).__spaMarker = true
+    })
+
+    await firstCardLink.focus()
+    await page.keyboard.press('Enter')
+
+    await expect(page).toHaveURL(new RegExp(href!.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
+    const stillClientSide = await page.evaluate(
+      () => (window as unknown as { __spaMarker?: boolean }).__spaMarker === true,
+    )
+    expect(stillClientSide).toBe(true)
+  })
+
   test('bespoke landing page does not show duplicate articles', async ({ page }) => {
     // The bespoke fixture lists individual articles AND their parent group
     // as children, which would cause duplicates without deduplication.
@@ -1671,7 +1782,7 @@ test.describe('LandingArticleGridWithFilter component', () => {
     const titles: string[] = []
     const count = await articleCards.count()
     for (let i = 0; i < count; i++) {
-      const title = await articleCards.nth(i).locator('h3 span').textContent()
+      const title = await articleCards.nth(i).locator('h3').textContent()
       titles.push(title!)
     }
     const uniqueTitles = new Set(titles)

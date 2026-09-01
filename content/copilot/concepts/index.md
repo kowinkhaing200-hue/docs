@@ -9,7 +9,6 @@ children:
   - /chat
   - /agents
   - /about-cloud-and-local-sandboxes
-  - /spark
   - /copilot-usage-metrics
   - /prompting
   - /context
@@ -24,4 +23,3 @@ children:
   - /learning-about-new-features-and-models
 contentType: concepts
 ---
-

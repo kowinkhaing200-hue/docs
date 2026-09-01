@@ -1209,6 +1209,12 @@
       "requestPath": "/repos/{owner}/{repo}/stargazers"
     },
     {
+      "slug": "get-stargazer-count",
+      "subcategory": "starring",
+      "verb": "get",
+      "requestPath": "/repos/{owner}/{repo}/stargazers/count"
+    },
+    {
       "slug": "list-watchers",
       "subcategory": "watching",
       "verb": "get",
@@ -2955,6 +2961,12 @@
   ],
   "enterprise-teams": [
     {
+      "slug": "list-enterprise-teams-for-a-user",
+      "subcategory": "enterprise-team-members",
+      "verb": "get",
+      "requestPath": "/enterprises/{enterprise}/members/{username}/teams"
+    },
+    {
       "slug": "list-enterprise-teams",
       "subcategory": "enterprise-teams",
       "verb": "get",
@@ -3169,6 +3181,12 @@
       "subcategory": "orgs",
       "verb": "delete",
       "requestPath": "/orgs/{org}/interaction-limits"
+    },
+    {
+      "slug": "get-pull-request-creation-cap-for-an-org",
+      "subcategory": "orgs",
+      "verb": "get",
+      "requestPath": "/orgs/{org}/interaction-limits/pulls/creation-cap"
     },
     {
       "slug": "update-pull-request-creation-cap-for-an-org",

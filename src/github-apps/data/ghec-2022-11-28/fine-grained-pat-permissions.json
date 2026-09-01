@@ -677,10 +677,46 @@
       },
       {
         "category": "orgs",
+        "slug": "revoke-all-credential-authorizations-for-an-organization",
+        "subcategory": "orgs",
+        "verb": "post",
+        "requestPath": "/orgs/{org}/credential-authorizations/revoke-all",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "orgs",
+        "slug": "revoke-a-single-credential-type-for-an-organization",
+        "subcategory": "orgs",
+        "verb": "post",
+        "requestPath": "/orgs/{org}/credential-authorizations/revoke-credential-type",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "orgs",
         "slug": "remove-a-saml-sso-authorization-for-an-organization",
         "subcategory": "orgs",
         "verb": "delete",
         "requestPath": "/orgs/{org}/credential-authorizations/{credential_id}",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "orgs",
+        "slug": "revoke-credential-authorizations-for-a-user-in-an-organization",
+        "subcategory": "orgs",
+        "verb": "post",
+        "requestPath": "/orgs/{org}/credential-authorizations/{username}/revoke",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "orgs",
+        "slug": "revoke-a-single-credential-type-for-a-user-in-an-organization",
+        "subcategory": "orgs",
+        "verb": "post",
+        "requestPath": "/orgs/{org}/credential-authorizations/{username}/revoke-credential-type",
         "additional-permissions": false,
         "access": "write"
       },
@@ -780,6 +816,15 @@
         "subcategory": "orgs",
         "verb": "delete",
         "requestPath": "/orgs/{org}/interaction-limits",
+        "additional-permissions": false,
+        "access": "write"
+      },
+      {
+        "category": "interactions",
+        "slug": "get-pull-request-creation-cap-for-an-org",
+        "subcategory": "orgs",
+        "verb": "get",
+        "requestPath": "/orgs/{org}/interaction-limits/pulls/creation-cap",
         "additional-permissions": false,
         "access": "write"
       },
@@ -3668,6 +3713,15 @@
       },
       {
         "category": "actions",
+        "slug": "get-runner-version-end-of-life-schedule-for-an-organization",
+        "subcategory": "self-hosted-runners",
+        "verb": "get",
+        "requestPath": "/orgs/{org}/actions/runners/deprecations/{version}",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "actions",
         "slug": "list-runner-applications-for-an-organization",
         "subcategory": "self-hosted-runners",
         "verb": "get",
@@ -4605,6 +4659,15 @@
         "subcategory": "self-hosted-runners",
         "verb": "get",
         "requestPath": "/repos/{owner}/{repo}/actions/runners",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "actions",
+        "slug": "get-runner-version-end-of-life-schedule-for-a-repository",
+        "subcategory": "self-hosted-runners",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/actions/runners/deprecations/{version}",
         "additional-permissions": false,
         "access": "read"
       },
@@ -8307,6 +8370,15 @@
         "subcategory": "rules",
         "verb": "get",
         "requestPath": "/repos/{owner}/{repo}/rulesets/{ruleset_id}",
+        "additional-permissions": false,
+        "access": "read"
+      },
+      {
+        "category": "activity",
+        "slug": "get-stargazer-count",
+        "subcategory": "starring",
+        "verb": "get",
+        "requestPath": "/repos/{owner}/{repo}/stargazers/count",
         "additional-permissions": false,
         "access": "read"
       },
