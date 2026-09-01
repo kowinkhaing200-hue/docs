@@ -4,7 +4,7 @@ registries:
   ghcr: # Define access for a private registry
     type: docker-registry
     url: ghcr.io
-    username: PAT
+    username: Moelwintun
     password: ${{secrets.BASE_CONTAINER_IMAGE_READER_DEPENDABOT}}
 
 updates:
