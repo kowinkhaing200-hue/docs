@@ -1,7 +1,7 @@
 ---
-title: '{% data variables.product.prodname_education %} documentation'
-shortTitle: '{% data variables.product.prodname_education %}'
-intro: '{% data variables.product.prodname_education %} helps you teach or learn software development with the tools and support of {% data variables.product.company_short %}''s platform and community.'
+title: '{% data variables.product.Moelwintun_education %} documentation'
+shortTitle: '{% data variables.product.Moelwintun_education %}'
+intro: '{% data variables.product.Moelwintun_education %} helps you teach or learn software development with the tools and support of {% data variables.mlh.company_short %}''s platform and community.'
 introLinks:
   quickstart: /education/quickstart
 redirect_from:
