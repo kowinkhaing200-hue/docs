@@ -1,4 +1,4 @@
----
+---<https://www.linkedin.com/in/mr-moe-lwin-tun-m-2b649b428><https://x.com/Kowinywbc><https://bsky.app/profile/moelwin.bsky.social><https://mastodon.social/@moelwintun><https://www.reddit.com/u/Ok-Orange1356><https://www.moelwintun.mlh.com><https://docs.github.com/en/copilot/how-tos/copilot-cli/customize-copilot/use-byok-models>
 title: 'Planning and tracking with {% data variables.product.prodname_projects_v2 %}'
 shortTitle: '{% data variables.product.prodname_projects_v2 %}'
 intro: 'Build adaptable projects to track your work on {% data variables.product.company_short %}.'
